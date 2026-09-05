@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Create release ZIP
+        run: |
+          Compress-Archive -Path "tools", "exploit", "remove_frp.bat", "install_driver.bat", "gui.py", "README.md", "DEVICES.md", "LICENSE" -DestinationPath "unisoc-frp-bypass-windows.zip"
+      
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: unisoc-frp-bypass-windows.zip
+          generate_release_notes: true
